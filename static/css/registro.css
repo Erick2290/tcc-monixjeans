@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.header {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.product-form {
+    margin: 20px;
+}
+
+.category {
+    margin-bottom: 20px;
+}
+
+.product img {
+    width: 100px;
+    height: auto;
+}
+
+.low-stock-alert {
+    margin: 20px;
+}
+
+#toggle-catalog {
+    display: block;
+    margin: 20px auto;
+}
+
+.main-register {   
+    width: 100vw;
+    height: 100vh;
+    background: #201b2c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-register {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.left-register > h1 {
+    color: #77ffc0;
+}
+
+.left-image-register {
+    width: 35vw;
+}
+
+.right-register {
+    width: 50vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-register {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px 35px;
+    background: #2f2841;
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px #00000056;
+}
+
+.card-register > h1 {  
+    color: #f80404;
+    font-weight: 800;
+    margin: 0;
+}
+
+.textfield {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.textfield > input {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    background: #514869;
+    color: #f0ffffde;
+    font-size: 12pt;
+    box-shadow: 0px 10px 40px #00000056;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.textfield > label {
+    color: #f0ffffde;
+    margin-bottom: 10px;
+}
+
+.textfield > input::placeholder {
+    color: #f0ffff94;
+}
+
+.btn-register {
+    width: 100%;
+    padding: 16px 0px;
+    margin-top: 25px; /* Adicionado margin-top para espaçamento */
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #2b134b;
+    background: #f80404;
+    cursor: pointer;
+    box-shadow: 0px 10px 40px -12px #f80404;
+    position: relative; /* Adicionado position: relative; */
+}
+
+.login-link {
+    color: #f0ffffde;
+    margin-top: 20px;
+}
+
+.login-link a {
+    color: #f80404;
+    text-decoration: none;
+}

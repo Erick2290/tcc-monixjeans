@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Estilos gerais */
+body {
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #201b2c; /* Cor de fundo escura */
+    color: #f0ffffde; /* Cor de texto principal */
+}
+
+.navbar-brand img {
+    margin-top: 8px; /* Ajuste de margem para o logo no cabeçalho */
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin-top: 50px;
+}
+
+/* Estilos para a seção principal de adicionar venda */
+.main-add-venda {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Para centralizar o conteúdo verticalmente */
+    background-color: #201b2c; /* Cor de fundo escura */
+}
+
+.card-add-venda {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    background-color: #2f2841; /* Cor de fundo do card */
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* Sombra suave */
+    text-align: center;
+}
+
+.card-add-venda h1 {
+    color: #f80404; /* Cor do título */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Inputs e formulários */
+.textfield input, .form-control {
+    background-color: #514869; /* Campo de input mais escuro */
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #f0ffffde; /* Cor do texto dos inputs */
+}
+
+.textfield input:focus, .form-control:focus {
+    background-color: #645b7e; /* Fundo ao focar */
+    border: none;
+    outline: none;
+}
+
+.textfield input::placeholder, .form-control::placeholder {
+    color: #f0ffff94; /* Cor do placeholder */
+}
+
+/* Botões */
+.btn-primary {
+    background-color: #f80404;
+    border-color: #f80404;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #c50000;
+    border-color: #c50000;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Lista de itens no carrinho */
+#lista-itens {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#lista-itens h2 {
+    color: #f0ffffde;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#lista {
+    list-style-type: none;
+    padding: 0;
+}
+
+#lista li {
+    background-color: #514869; /* Fundo escuro para os itens */
+    border: none;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+/* Ajuste responsivo */
+@media (min-width: 768px) {
+    .card-add-venda {
+        width: 70%;
+    }
+}

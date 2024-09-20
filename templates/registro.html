@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registro.css') }}">
+    <title>Registro</title>
+</head>
+<body>
+    <div class="main-register">
+        <div class="left-register">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" class="left-image-register" alt="Menino">
+        </div>
+        <div class="right-register">
+            <div class="card-register">
+                <h1>REGISTRO</h1>
+                <form id="registroForm" action="{{ url_for('registro') }}" method="POST">
+                    <div class="textfield">
+                        <label for="nome">Nome</label>
+                        <input type="text" name="nome" placeholder="Nome" required>
+                    </div>
+                    <div class="textfield">
+                        <label for="cpf">CPF</label>
+                        <input type="text" name="cpf" placeholder="CPF" required>
+                    </div>
+                    <div class="textfield">
+                        <label for="senha">Senha</label>
+                        <input type="password" name="senha" placeholder="Senha" required>
+                    </div>
+                    <div class="textfield">
+                        <label for="confirmar-senha">Confirmar Senha</label>
+                        <input type="password" name="confirmar-senha" placeholder="Confirmar Senha" required>
+                    </div>
+                    <button type="submit" class="btn-register">Registrar</button>
+                </form>
+                <!-- Link para a página de login -->
+                <p class="login-link">Já tem uma conta? <a href="{{ url_for('login') }}">Faça login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript para exibir alerta -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registroForm');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Registro concluído!');  // Exibe o alerta de registro concluído
+                        window.location.href = "{{ url_for('login') }}";  // Redireciona para a página de login
+                    } else {
+                        alert('Erro ao registrar: ' + data.message);  // Exibe o alerta de erro
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao conectar com o servidor');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

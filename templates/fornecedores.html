@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Fornecedores</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Adicione outros estilos se necessário -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fornecedores.css') }}">
+</head> 
+<body>
+    
+<nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+    <div class="container-fluid d-flex justify-content-center">
+        <a class="navbar-brand" href="{{ url_for('menu') }}">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Monix" width="200" height="45">
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- Formulário para adicionar fornecedor -->
+    <form id="form-adicionar">
+        <h2>Adicionar Fornecedor</h2>
+        <div class="mb-3">
+            <label for="nome">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" required>
+        </div>
+        <div class="mb-3">
+            <label for="endereco">Endereço:</label>
+            <input type="text" class="form-control" id="endereco" name="endereco" required>
+        </div>
+        <div class="mb-3">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="produtos">Produtos:</label>
+            <input type="text" class="form-control" id="produtos" name="produtos" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Adicionar</button>
+    </form>
+    
+    <div class="container mt-4 text-center"> <!-- Adiciona a classe text-center para centralizar o conteúdo -->
+        <form class="d-inline-block" action="{{ url_for('pesquisar_fornecedor') }}" method="GET">
+            <input class="form-control me-2 pesquisa-input" type="search" placeholder="Pesquisar fornecedor por nome" aria-label="search" name="nome">
+            <button class="btn btn-outline-danger" type="submit">Pesquisar</button>
+        </form>
+    </div>
+    
+    <!-- Lista de fornecedores -->
+    <ul id="lista-fornecedores" class="mt-4">
+        {% for fornecedor in fornecedores %}
+        <li data-id="{{ fornecedor[0] }}">
+            <h3>{{ fornecedor[3] }}</h3>
+            <p><strong>Endereço:</strong> {{ fornecedor[1] }}</p>
+            <p><strong>Email:</strong> {{ fornecedor[2] }}</p>
+            <p><strong>Produtos:</strong> {{ fornecedor[4] }}</p>
+            <button class="btn btn-sm btn-warning btn-editar" data-bs-toggle="modal" data-bs-target="#editarFornecedorModal" data-id="{{ fornecedor[0] }}" data-nome="{{ fornecedor[3] }}" data-endereco="{{ fornecedor[1] }}" data-email="{{ fornecedor[2] }}" data-produtos="{{ fornecedor[4] }}">Editar</button>
+            <button class="btn btn-sm btn-danger btn-deletar">Deletar</button>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Modal template -->
+<div class="modal fade" id="editarFornecedorModal" tabindex="-1" aria-labelledby="editarFornecedorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form-editar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarFornecedorModalLabel">Editar Fornecedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="fornecedor-id">
+                    <div class="mb-3">
+                        <label for="fornecedor-nome" class="form-label">Nome:</label>
+                        <input type="text" class="form-control" id="fornecedor-nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fornecedor-endereco" class="form-label">Endereço:</label>
+                        <input type="text" class="form-control" id="fornecedor-endereco" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fornecedor-email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="fornecedor-email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fornecedor-produtos" class="form-label">Produtos:</label> <input type="text" class="form-control" id="fornecedor-produtos" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/fornecedores.js') }}"></script>
+
+<script>
+    
+</script>
+</body>
+</html>

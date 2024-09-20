@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Produtos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gerenciar.css') }}">
+</head>
+<body>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex justify-content-center" href="{{ url_for('menu') }}">
+                <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="monix" width="200" height="45">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('gerenciar') }}">Gerenciar Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Gerenciamento de Produtos</h1>
+
+        <!-- Alerta de Estoque Baixo -->
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">Alerta de Estoque</h4>
+            {% if produtos_baixo_estoque %}
+            <ul>
+              {% for produto in produtos_baixo_estoque %}
+                <li>{{ produto[0] }}  Unidades de      {{ produto[1] }} </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+        <!-- Formulário para Adicionar Produto -->
+        <div id="formProduto" class="mb-4" method="POST">
+            <h2>Adicionar Produto</h2>
+            <form id="adicionarProdutoForm">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" name="nome" required>
+                </div>
+                <div class="mb-3">
+                    <label for="tamanho" class="form-label">Tamanho</label>
+                    <input type="text" class="form-control" id="tamanho" name="tamanho" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cor" class="form-label">Cor</label>
+                    <input type="text" class="form-control" id="cor" name="cor" required>
+                </div>
+                <div class="mb-3">
+                    <label for="preco" class="form-label">Preço</label>
+                    <input type="number" step="0.01" class="form-control" id="preco" name="preco" required>
+                </div>
+                <div class="mb-3">
+                    <label for="quantidade" class="form-label">Quantidade</label>
+                    <input type="number" class="form-control" id="quantidade" name="quantidade" required>
+                </div>
+                <div class="mb-3">
+                    <label for="fornecedor" class="form-label">Fornecedor</label>
+                    <select class="form-control" id="fornecedor_id" name="fornecedor" required>
+                        {% for fornecedor in fornecedores %}
+                            <option value="{{ fornecedor[0] }}">{{ fornecedor[3] }}</option> <!-- fornecedor[0] é o id, fornecedor[1] é o nome -->
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <button type="submit" id="adicionarProduto" class="btn btn-primary">Adicionar Produto</button>
+            </form>
+        </div>
+
+        <div class="container mt-4 text-center"> <!-- Adiciona a classe text-center para centralizar o conteúdo -->
+            <form class="d-inline-block" action="{{ url_for('pesquisar_produtos') }}" method="GET">
+                <input class="form-control me-2 pesquisa-input" type="search" placeholder="Pesquisar fornecedor por nome" aria-label="search" name="nome">
+                <button class="btn btn-outline-danger" type="submit">Pesquisar</button>
+            </form>
+        </div>
+        
+
+
+<!-- Lista de Produtos -->
+<h2>Lista de Produtos</h2>
+<ul id="lista-produtos">
+    {% for produto in produtos %}
+        <li data-id="{{ produto[0] }}">
+            <h3>{{ produto[1] }}</h3>
+            <p><strong>Tamanho:</strong> {{ produto[2] }}</p>
+            <p><strong>Cor:</strong> {{ produto[3] }}</p>
+            <p><strong>Preço:</strong> {{ produto[4] }}</p>
+            <p><strong>Quantidade:</strong> {{ produto[5] }}</p>
+            <p><strong>Fornecedor:</strong> {{ produto[6] }}</p>
+            <button class="btn btn-warning btn-sm" onclick="abrirModalEditar({{ produto[0] }})">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="deletarProduto({{ produto[0] }})">Excluir</button>
+        </li>
+    {% endfor %}
+</ul>
+
+        <!-- Modal para Editar Produto -->
+        <div class="modal fade" id="editarProdutoModal" tabindex="-1" aria-labelledby="editarProdutoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarProdutoModalLabel">Editar Produto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editarProdutoForm">
+                            <input type="hidden" id="produtoId">
+                            <div class="mb-3">
+                                <label for="editNome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="editNome" name="nome" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTamanho" class="form-label">Tamanho</label>
+                                <input type="text" class="form-control" id="editTamanho" name="tamanho" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCor" class="form-label">Cor</label>
+                                <input type="text" class="form-control" id="editCor" name="cor" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPreco" class="form-label">Preço</label>
+                                <input type="number" step="0.01" class="form-control" id="editPreco" name="preco" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editQuantidade" class="form-label">Quantidade</label>
+                                <input type="number" class="form-control" id="editQuantidade" name="quantidade" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fornecedor" class="form-label">Fornecedor</label>
+                                <select class="form-control" id="fornecedor_id" name="fornecedor" required>
+                                    {% for fornecedor in fornecedores %}
+                                        <option value="{{ fornecedor[0] }}">{{ fornecedor[3] }}</option> <!-- fornecedor[0] é o id, fornecedor[1] é o nome -->
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            
+                            <button type="submit" id="salvarEdicao" class="btn btn-primary">Salvar Alterações</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/gerenciar.js') }}"></script>
+
+
+</body>
+</html>

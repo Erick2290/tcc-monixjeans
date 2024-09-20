@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #201b2c;
+    height: 100vh;
+}
+
+
+
+* {
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.interface {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+h2.titulo {
+    color: rgb(255, 255, 255);
+    font-size: 38px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+h2.titulo span {
+    color: #cf0606;
+}
+
+/* topo do site */
+section.toposite {
+    padding: 20px 0; /* Remove o espaço excessivo */
+}
+
+section.toposite .flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+section.toposite .flex > div {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+}
+
+/* Ajustes para a citação e o nome */
+.txt-top-site {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #cf0606;
+}
+
+.txt-top-site h1 {
+    font-size: 24px;
+    line-height: 1.5;
+    text-align: center;
+    margin: 0;
+}
+
+.txt-top-site h2 {
+    color: white; /* Define a cor do nome */
+    font-size: 18px;
+    margin-top: 10px; /* Adiciona um espaço acima do nome */
+}
+
+/* Ajustes para a imagem */
+.img-toposite {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.img-toposite img {
+    max-width: 100%;
+    height: auto;
+    width: 300px; /* Aumentado o tamanho da imagem */
+    animation: flutuar 2s ease-in-out infinite alternate;
+}
+
+@keyframes flutuar {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-20px);
+    }
+}
+
+/* funcionalidades */
+section.funcionalidades {
+    padding: 20px 4%;
+}
+
+section.funcionalidades .flex {
+    gap: 20px;
+}
+
+.funcionalidades .funcionalidades-box {
+    color: aliceblue;
+    padding: 20px;
+    border-radius: 20px;
+    transition: .2s;
+    text-align: center;
+    flex: 1 1 200px;
+}
+
+.funcionalidades .funcionalidades-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ffffff80;
+}
+
+.funcionalidades .funcionalidades-box i {
+    font-size: 50px;
+    color: #cf0606;
+}
+
+.funcionalidades .funcionalidades-box h3 {
+    font-size: 24px;
+    margin: 15px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    section.toposite .flex {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .txt-top-site h1 {
+        font-size: 18px;
+    }
+
+    .img-toposite img {
+        margin-top: 20px;
+    }
+}

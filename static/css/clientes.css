@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+    color: #f0ffffde;
+    background-color: #201b2c;
+}
+
+.container {
+    padding: 20px;
+}
+
+/* Estilos para o formulário de adicionar cliente */
+#form-adicionar {
+    background-color: #2f2841;
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px #00000056;
+    padding: 20px;
+    color: #f0ffffde;
+    margin-bottom: 20px;
+}
+
+#form-adicionar h2 {
+    color: #f80404;
+    margin-bottom: 20px;
+}
+
+#form-adicionar .mb-3 {
+    margin-bottom: 15px;
+}
+
+#form-adicionar label {
+    color: #f0ffffde;
+}
+
+#form-adicionar input {
+    background: #514869;
+    color: #f0ffffde;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#form-adicionar input::placeholder {
+    color: #f0ffff94;
+}
+
+#form-adicionar .btn-primary {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #f80404;
+    color: #2b134b;
+    cursor: pointer;
+}
+
+/* Estilos para a lista de clientes */
+#lista-clientes {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#lista-clientes li {
+    background-color: #00000009;
+    border: 1px solid #f80404;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.521);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+#lista-clientes h3 {
+    margin-top: 0;
+    color: #f80404;
+}
+
+#lista-clientes p {
+    margin-bottom: 10px;
+}
+
+#lista-clientes li button {
+    background-color: #f80404;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 3px 6px;
+    margin-top: 10px;
+}
+
+.btn-danger {
+    margin-left: 5px;
+}
+
+.alert-warning {
+    background-color: #201b2c;
+    color: #f0ffffde;
+    border-color: #f80404;
+}
+
+.navbar {
+    padding: 8px 0;
+    background-color: #000000;
+    border-bottom: 5px solid #ff0000;
+}
+
+.navbar-brand {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.modal-content {
+    background-color: #2f2841; /* Fundo do modal */
+    color: #f0ffffde; /* Texto claro */
+    border-radius: 10px;
+    border: 1px solid #f80404; /* Borda vermelha */
+}
+
+.modal-header {
+    border-bottom: 1px solid #f80404; /* Borda vermelha no header */
+}
+
+.modal-title {
+    color: #f80404; /* Título em vermelho */
+}
+
+.modal-body label {
+    color: #f0ffffde; /* Labels em cor clara */
+}
+
+
+.modal-footer .btn-primary {
+    background-color: #f80404; /* Botão salvar com cor vermelha */
+    border-color: #f80404;
+}
+
+
+.navbar {
+    padding: 8px 0;
+    background-color: #000000;
+    border-bottom: 5px solid #ff0000;
+}
+
+.navbar-brand {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.navbar-brand img {
+    margin: 0;
+}
+
+.navbar-nav .nav-link {
+    color: #f0ffffde;
+    font-weight: 800;
+}
+
+.navbar-nav .nav-link.active {
+    color: #000000;
+}
+
+.navbar-toggler {
+    border-color: #f0ffffde;
+}
+
+
+.pesquisa-input {
+    max-width: 300px; /* adjust the width to your desired value */
+    width: 250px; /* adjust the width to your desired value */
+    display: grid;
+    justify-items: center;
+}
+
+@media (max-width: 576px) {
+    .pesquisa-input {
+        width: 100%; /* Ajuste para ocupar toda a largura em dispositivos menores */
+    }
+}

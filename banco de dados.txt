@@ -1,0 +1,53 @@
+CREATE DATABASE IF NOT EXISTS testemonix78;
+USE testemonix78;
+
+CREATE TABLE Cliente (
+    idCliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    cpf VARCHAR(11) UNIQUE,
+    cidade VARCHAR(255)
+);
+
+CREATE TABLE Fornecedor (
+    idFornecedor INT AUTO_INCREMENT PRIMARY KEY,
+    endereco VARCHAR(255),
+    email VARCHAR(255),
+    nome VARCHAR(255),
+    produtos VARCHAR(255)
+);
+
+CREATE TABLE Produto (
+    idProduto INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45),
+    tamanho VARCHAR(45),
+    cor VARCHAR(45),
+    preco INT,
+    quantidade INT,
+    idFornecedor INT,
+    FOREIGN KEY (idFornecedor) REFERENCES Fornecedor(idFornecedor)
+);
+
+CREATE TABLE Compra (
+    idCompra INT AUTO_INCREMENT PRIMARY KEY,
+    idCliente INT,
+    idProduto INT,
+    data DATE,
+    quantidade INT,
+    valor INT,
+    FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
+    FOREIGN KEY (idProduto) REFERENCES Produto(idProduto)
+);
+
+CREATE TABLE Usuario (
+    cpf VARCHAR(11) PRIMARY KEY,
+    senha VARCHAR(255),
+    nome VARCHAR(255)
+);
+
+CREATE TABLE Manipula (
+    idProduto INT,
+    cpfUsuario VARCHAR(11),
+    PRIMARY KEY (idProduto, cpfUsuario),
+    FOREIGN KEY (idProduto) REFERENCES Produto(idProduto),
+    FOREIGN KEY (cpfUsuario) REFERENCES Usuario(cpf)
+);
