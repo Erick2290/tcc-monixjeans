@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 listaProdutos.innerHTML = '';
                 data.produtos.forEach(produto => {
                     listaProdutos.innerHTML += `
-                        <li data-id="${produto.id}">
+                        <li data-id="${produto .id}">
                             <h3>${produto.nome}</h3>
                             <p><strong>Tamanho:</strong> ${produto.tamanho}</p>
                             <p><strong>Cor:</strong> ${produto.cor}</p>
@@ -151,10 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     // Função para pesquisar fornecedores
-    document.getElementById('fornecedorPesquisa').addEventListener('input', function() {
-        pesquisarFornecedores(); // Chame a função aqui
-    });
-
     function pesquisarFornecedores() {
         const nome = document.getElementById('fornecedorPesquisa').value || document.getElementById('fornecedorPesquisaEdit').value;
         
@@ -167,15 +163,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 fornecedorSelect.innerHTML = '<option value="">Selecione um fornecedor</option>'; // Resetar opções
                 
                 const listaFornecedores = document.getElementById('listaFornecedores');
+                const listaFornecedoresEdit = document.getElementById('listaFornecedoresEdit');
                 listaFornecedores.innerHTML = ''; // Limpar a lista existente
+                listaFornecedoresEdit.innerHTML = ''; // Limpar a lista existente
                 listaFornecedores.style.display = 'none'; // Ocultar a lista por padrão
-    
+                listaFornecedoresEdit.style.display = 'none'; // Ocultar a lista por padrão
+        
                 if (data.fornecedores && data.fornecedores.length > 0) {
                     data.fornecedores.forEach(fornecedor => {
                         fornecedorSelect.innerHTML += `
                             <option value="${fornecedor.id}">${fornecedor.nome}</option>
                         `;
-    
+        
                         // Adicionar opções à lista de fornecedores
                         const listItem = document.createElement('li');
                         listItem.className = 'list-group-item';
@@ -188,8 +187,21 @@ document.addEventListener('DOMContentLoaded', function () {
                             listaFornecedores.style.display = 'none'; // Ocultar a lista
                         };
                         listaFornecedores.appendChild(listItem);
+        
+                        // Adicionar opções à lista de fornecedores no modal de edição
+                        const listItemEdit = document.createElement('li');
+                        listItemEdit.className = 'list-group-item';
+                        listItemEdit.textContent = fornecedor.nome;
+                        listItemEdit.onclick = function() {
+                            // Ao clicar, definir o fornecedor na entrada
+                            document.getElementById('fornecedorPesquisaEdit').value = fornecedor.nome;
+                            document.getElementById('fornecedor_id_edit').value = fornecedor.id; // Atribuir o ID do fornecedor ao campo oculto
+                            listaFornecedoresEdit.style.display = 'none'; // Ocultar a lista
+                        };
+                        listaFornecedoresEdit.appendChild(listItemEdit);
                     });
                     listaFornecedores.style.display = 'block'; // Exibir a lista
+                    listaFornecedoresEdit.style.display = 'block'; // Exibir a lista
                 } else {
                     fornecedorSelect.innerHTML += '<option value="">Nenhum fornecedor encontrado</option>';
                 }
@@ -200,41 +212,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     
+    document.getElementById('fornecedorPesquisa').addEventListener('input', pesquisarFornecedores);
+    document.getElementById('fornecedorPesquisaEdit').addEventListener('input', pesquisarFornecedores);
 });
 
-
 $(document).ready(function() {
-    // Pesquisa de fornecedores no modal de edição
-    $('#fornecedorPesquisaEdit').on('input', function() {
-        let nomeFornecedor = $(this).val();
-        if (nomeFornecedor.length > 0) {
-            $.ajax({
-                url: '/gerenciar/fornecedores/pesquisar',
-                method: 'GET',
-                data: { nome: nomeFornecedor },
-                success: function(response) {
-                    let fornecedores = response.fornecedores;
-                    let lista = $('#listaFornecedoresEdit');
-                    lista.empty(); // Limpa a lista existente
-                    if (fornecedores.length > 0) {
-                        fornecedores.forEach(function(fornecedor) {
-                            lista.append(`<li class="list-group-item" data-id="${fornecedor.id}">${fornecedor.nome}</li>`);
-                        });
-                        lista.show(); // Mostra a lista
-                    } else {
-                        lista.hide(); // Esconde a lista se não houver fornecedores
-                    }
-                },
-                error: function() {
-                    alert('Erro ao buscar fornecedores.');
-                }
-            });
-        } else {
-            $('#listaFornecedoresEdit').hide(); // Esconde a lista se o campo estiver vazio
-        }
+    // Selecionar fornecedor da lista
+    $(document).on('click', '#listaFornecedores .list-group-item', function() {
+        let idFornecedor = $(this).data('id');
+        let nomeFornecedor = $(this).text();
+        $('#fornecedorPesquisa').val(nomeFornecedor); // Define o nome no campo de pesquisa
+        $('#fornecedor_id').val(idFornecedor); // Define o ID do fornecedor oculto
+        $('#listaFornecedores').hide(); // Esconde a lista
     });
 
-    // Selecionar fornecedor da lista
     $(document).on('click', '#listaFornecedoresEdit .list-group-item', function() {
         let idFornecedor = $(this).data('id');
         let nomeFornecedor = $(this).text();
@@ -244,46 +235,3 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
-    // Pesquisa de fornecedores no modal de edição
-    $('#fornecedorPesquisaEdit').on('input', function() {
-        let nomeFornecedor = $(this).val();
-        if (nomeFornecedor.length > 0) {
-            $.ajax({
-                url: '/gerenciar/fornecedores/pesquisar',
-                method: 'GET',
-                data: { nome: nomeFornecedor },
-                success: function(response) {
-                    let fornecedores = response.fornecedores;
-                    let lista = $('#listaFornecedoresEdit');
-                    lista.empty(); // Limpa a lista existente
-                    if (fornecedores.length > 0) {
-                        fornecedores.forEach(function(fornecedor) {
-                            lista.append(`<li class="list-group-item" data-id="${fornecedor.id}">${fornecedor.nome}</li>`);
-                        });
-                        lista.show(); // Mostra a lista
-                    } else {
-                        lista.hide(); // Esconde a lista se não houver fornecedores
-                    }
-                },
-                error: function() {
-                    alert('Erro ao buscar fornecedores.');
-                }
-            });
-        } else {
-            $('#listaFornecedoresEdit').hide(); // Esconde a lista se o campo estiver vazio
-        }
-    });
-
-    // Selecionar fornecedor da lista
-    $(document).on('click', '#listaFornecedoresEdit .list-group-item', function() {
-        let idFornecedor = $(this).data('id');
-        let nomeFornecedor = $(this).text();
-        $('#fornecedorPesquisaEdit').val(nomeFornecedor); // Define o nome no campo de pesquisa
-        $('#fornecedor_id_edit').val(idFornecedor); // Define o ID do fornecedor oculto
-        $('#listaFornecedoresEdit').hide(); // Esconde a lista
-    });
-});
-
-// Adicione o seguinte código ao final do arquivo gerenciar.js
-document.getElementById('fornecedorPesquisaEdit').addEventListener('input', pesquisarFornecedores);
