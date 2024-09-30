@@ -272,8 +272,34 @@ body {
     gap: 10px; /* Espaçamento entre os botões */
 }
 
+/* Estilo para as opções da lista de fornecedores */
+#listaFornecedores div {
+    padding: 10px; /* Espaçamento interno */
+    cursor: pointer; /* Cursor de mão ao passar o mouse */
+}
 
+#listaFornecedores div:hover {
+    background-color: #2f2841; /* Cor ao passar o mouse */
+}
 
+#listaFornecedores {
+    #listaFornecedores {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        display: none; /* Inicia oculta */
+        position: absolute;
+        background-color: #2b134b; /* Mudando para #2b134b */
+        z-index: 1000; /* Certifique-se de que a lista apareça sobre outros elementos */
+    }
+}
+
+.list-group {
+
+    --bs-list-group-bg: #514869;
+    --bs-list-group-border-color: #514869;
+    --bs-list-group-color: #ffffff;
+}
 
 @media (max-width: 576px) {
     .pesquisa-input {

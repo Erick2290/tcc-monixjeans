@@ -37,14 +37,14 @@
             {% if produtos_baixo_estoque %}
             <ul>
               {% for produto in produtos_baixo_estoque %}
-                <li>{{ produto[0] }}  Unidades de      {{ produto[1] }} </li>
+                <li>{{ produto[0] }}  Unidades de {{ produto[1] }} </li>
               {% endfor %}
             </ul>
           {% endif %}
         </div>
 
         <!-- Formulário para Adicionar Produto -->
-        <div id="formProduto" class="mb-4" method="POST">
+        <div id="formProduto" class="mb-4">
             <h2>Adicionar Produto</h2>
             <form id="adicionarProdutoForm">
                 <div class="mb-3">
@@ -69,97 +69,86 @@
                 </div>
                 <div class="mb-3">
                     <label for="fornecedor" class="form-label">Fornecedor</label>
-                    <select class="form-control" id="fornecedor_id" name="fornecedor" required>
-                        {% for fornecedor in fornecedores %}
-                            <option value="{{ fornecedor[0] }}">{{ fornecedor[3] }}</option> <!-- fornecedor[0] é o id, fornecedor[1] é o nome -->
-                        {% endfor %}
-                    </select>
+                    <input type="text" class="form-control" id="fornecedorPesquisa" placeholder="Pesquisar fornecedor por nome">
+                    <input type="hidden" id="fornecedor_id" name="fornecedor_id"> <!-- Campo oculto para enviar o ID do fornecedor -->
+                    <ul id="listaFornecedores" class="list-group mt-2" style="display: none;"></ul>
                 </div>
-
-
                 <button type="submit" id="adicionarProduto" class="btn btn-primary">Adicionar Produto</button>
             </form>
         </div>
 
-        <div class="container mt-4 text-center"> <!-- Adiciona a classe text-center para centralizar o conteúdo -->
+        <div class="container mt-4 text-center">
             <form class="d-inline-block" action="{{ url_for('pesquisar_produtos') }}" method="GET">
-                <input class="form-control me-2 pesquisa-input" type="search" placeholder="Pesquisar fornecedor por nome" aria-label="search" name="nome">
+                <input class="form-control me-2 pesquisa-input" type="search" placeholder="Pesquisar Produto" aria-label="search" name="nome">
                 <button class="btn btn-outline-danger" type="submit">Pesquisar</button>
             </form>
         </div>
-        
 
-
-<!-- Lista de Produtos -->
-<h2>Lista de Produtos</h2>
-<ul id="lista-produtos">
-    {% for produto in produtos %}
-        <li data-id="{{ produto[0] }}">
-            <h3>{{ produto[1] }}</h3>
-            <p><strong>Tamanho:</strong> {{ produto[2] }}</p>
-            <p><strong>Cor:</strong> {{ produto[3] }}</p>
-            <p><strong>Preço:</strong> {{ produto[4] }}</p>
-            <p><strong>Quantidade:</strong> {{ produto[5] }}</p>
-            <p><strong>Fornecedor:</strong> {{ produto[6] }}</p>
-            <button class="btn btn-warning btn-sm" onclick="abrirModalEditar({{ produto[0] }})">Editar</button>
-            <button class="btn btn-danger btn-sm" onclick="deletarProduto({{ produto[0] }})">Excluir</button>
-        </li>
-    {% endfor %}
-</ul>
+        <!-- Lista de Produtos -->
+        <h2>Lista de Produtos</h2>
+        <ul id="lista-produtos">
+            {% for produto in produtos %}
+                <li data-id="{{ produto[0] }}">
+                    <h3>{{ produto[1] }}</h3>
+                    <p><strong>Tamanho:</strong> {{ produto[2] }}</p>
+                    <p><strong>Cor:</strong> {{ produto[3] }}</p>
+                    <p><strong>Preço:</strong> {{ produto[4] }}</p>
+                    <p><strong>Quantidade:</strong> {{ produto[5] }}</p>
+                    <p><strong>Fornecedor:</strong> {{ produto[6] }}</p>
+                    <button class="btn btn-warning btn-sm" onclick="abrirModalEditar({{ produto[0] }})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deletarProduto({{ produto[0] }})">Excluir</button>
+                </li>
+            {% endfor %}
+        </ul>
 
         <!-- Modal para Editar Produto -->
-        <div class="modal fade" id="editarProdutoModal" tabindex="-1" aria-labelledby="editarProdutoModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editarProdutoModalLabel">Editar Produto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="editarProdutoModal" tabindex="-1" aria-labelledby="editarProdutoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarProdutoModalLabel">Editar Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editarProdutoForm">
+                    <input type="hidden" id="produtoId">
+                    <div class="mb-3">
+                        <label for="editNome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="editNome" name="nome" required>
                     </div>
-                    <div class="modal-body">
-                        <form id="editarProdutoForm">
-                            <input type="hidden" id="produtoId">
-                            <div class="mb-3">
-                                <label for="editNome" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="editNome" name="nome" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editTamanho" class="form-label">Tamanho</label>
-                                <input type="text" class="form-control" id="editTamanho" name="tamanho" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editCor" class="form-label">Cor</label>
-                                <input type="text" class="form-control" id="editCor" name="cor" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editPreco" class="form-label">Preço</label>
-                                <input type="number" step="0.01" class="form-control" id="editPreco" name="preco" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editQuantidade" class="form-label">Quantidade</label>
-                                <input type="number" class="form-control" id="editQuantidade" name="quantidade" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="fornecedor" class="form-label">Fornecedor</label>
-                                <select class="form-control" id="fornecedor_id" name="fornecedor" required>
-                                    {% for fornecedor in fornecedores %}
-                                        <option value="{{ fornecedor[0] }}">{{ fornecedor[3] }}</option> <!-- fornecedor[0] é o id, fornecedor[1] é o nome -->
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            
-                            <button type="submit" id="salvarEdicao" class="btn btn-primary">Salvar Alterações</button>
-                        </form>
+                    <div class="mb-3">
+                        <label for="editTamanho" class="form-label">Tamanho</label>
+                        <input type="text" class="form-control" id="editTamanho" name="tamanho" required>
                     </div>
-                </div>
+                    <div class="mb-3">
+                        <label for="editCor" class="form-label">Cor</label>
+                        <input type="text" class="form-control" id="editCor" name="cor" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPreco" class="form-label">Preço</label>
+                        <input type="number" step="0.01" class="form-control" id="editPreco" name="preco" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editQuantidade" class="form-label">Quantidade</label>
+                        <input type="number" class="form-control" id="editQuantidade" name="quantidade" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fornecedorPesquisaEdit" class="form-label">Fornecedor</label>
+                        <input type="text" class="form-control" id="fornecedorPesquisaEdit" placeholder="Pesquisar fornecedor por nome">
+                        <input type="hidden" id="fornecedor_id_edit" name="fornecedor_id"> <!-- Campo oculto para enviar o ID do fornecedor -->
+                        <ul id="listaFornecedoresEdit" class="list-group mt-2" style="display: none;"></ul>
+                    </div>
+                    <button type="submit" id="salvarEdicao" class="btn btn-primary">Salvar Alterações</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ url_for('static', filename='js/gerenciar.js') }}"></script>
-
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </body>
 </html>

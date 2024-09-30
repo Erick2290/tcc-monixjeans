@@ -133,6 +133,22 @@ def gerenciar():
         return render_template('erro.html', mensagem=str(e))
 
 
+@app.route('/gerenciar/fornecedores/pesquisar', methods=['GET'])
+def pesquisar_fornecedores():
+    nome_fornecedor = request.args.get('nome', default='', type=str)
+    
+    try:
+        cursor.execute("SELECT idFornecedor, nome FROM Fornecedor WHERE nome LIKE %s", ('%' + nome_fornecedor + '%',))
+        fornecedores = cursor.fetchall()
+
+        # Convertendo fornecedores para dicionário para retornar como JSON
+        fornecedores_list = [{'id': fornecedor[0], 'nome': fornecedor[1]} for fornecedor in fornecedores]
+        
+        return jsonify({'fornecedores': fornecedores_list})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 
 #ROTA PARA ADICIONAR PRODUTOS
 @app.route('/produtos/adicionar', methods=['GET', 'POST'])
@@ -154,7 +170,7 @@ def adicionar_produto():
             cursor.execute("""
                 INSERT INTO Produto (nome, tamanho, cor, preco, quantidade, idFornecedor)
                 VALUES (%s, %s, %s, %s, %s, %s)
-            """, (data['nome'], data['tamanho'], data['cor'], data['preco'], data['quantidade'], data['fornecedor']))
+            """, (data['nome'], data['tamanho'], data['cor'], data['preco'], data['quantidade'], data['fornecedor_id']))
             return jsonify(success=True)
         except Exception as e:
             return jsonify(success=False, message='Erro ao adicionar produto: ' + str(e))
@@ -186,7 +202,7 @@ def editar_produto(id):
             UPDATE Produto
             SET nome = %s, tamanho = %s, cor = %s, preco = %s, quantidade = %s, idFornecedor = %s
             WHERE idProduto = %s
-        """, (data['nome'], data['tamanho'], data['cor'], data['preco'], data['quantidade'], data['fornecedor'], id))
+        """, (data['nome'], data['tamanho'], data['cor'], data['preco'], data['quantidade'], data['fornecedor_id'], id))
         return jsonify(success=True)
     except Exception as e:
         return jsonify(success=False, message='Erro ao editar produto: ' + str(e))

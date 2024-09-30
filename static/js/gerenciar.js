@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(adicionarProdutoForm);
         const data = Object.fromEntries(formData.entries());
     
+        // Log do ID do fornecedor para depuração
+        console.log('ID do fornecedor:', data.fornecedor_id); // Verifique se o ID do fornecedor está correto
+
         fetch('/produtos/adicionar', {
             method: 'POST',
             headers: {
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('editCor').value = produto.cor;
                 document.getElementById('editPreco').value = produto.preco;
                 document.getElementById('editQuantidade').value = produto.quantidade;
-                document.getElementById('fornecedor_id').value = produto.fornecedor_id;
+                document.getElementById('fornecedor_id_edit').value = produto.fornecedor; // Corrigir para usar 'fornecedor'
                 const editarProdutoModal = new bootstrap.Modal(document.getElementById('editarProdutoModal'));
                 editarProdutoModal.show();
             } else {
@@ -147,4 +150,140 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     
+    // Função para pesquisar fornecedores
+    document.getElementById('fornecedorPesquisa').addEventListener('input', function() {
+        pesquisarFornecedores(); // Chame a função aqui
+    });
+
+    function pesquisarFornecedores() {
+        const nome = document.getElementById('fornecedorPesquisa').value || document.getElementById('fornecedorPesquisaEdit').value;
+        
+        $.ajax({
+            url: `/gerenciar/fornecedores/pesquisar`,
+            method: 'GET',
+            data: { nome: nome },
+            success: function(data) {
+                const fornecedorSelect = document.getElementById('fornecedor_id');
+                fornecedorSelect.innerHTML = '<option value="">Selecione um fornecedor</option>'; // Resetar opções
+                
+                const listaFornecedores = document.getElementById('listaFornecedores');
+                listaFornecedores.innerHTML = ''; // Limpar a lista existente
+                listaFornecedores.style.display = 'none'; // Ocultar a lista por padrão
+    
+                if (data.fornecedores && data.fornecedores.length > 0) {
+                    data.fornecedores.forEach(fornecedor => {
+                        fornecedorSelect.innerHTML += `
+                            <option value="${fornecedor.id}">${fornecedor.nome}</option>
+                        `;
+    
+                        // Adicionar opções à lista de fornecedores
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item';
+                        listItem.textContent = fornecedor.nome;
+                        listItem.onclick = function() {
+                            // Ao clicar, definir o fornecedor na entrada
+                            document.getElementById('fornecedorPesquisa').value = fornecedor.nome;
+                            fornecedorSelect.value = fornecedor.id; // Selecionar o fornecedor no select
+                            document.getElementById('fornecedor_id').value = fornecedor.id; // Atribuir o ID do fornecedor ao campo oculto
+                            listaFornecedores.style.display = 'none'; // Ocultar a lista
+                        };
+                        listaFornecedores.appendChild(listItem);
+                    });
+                    listaFornecedores.style.display = 'block'; // Exibir a lista
+                } else {
+                    fornecedorSelect.innerHTML += '<option value="">Nenhum fornecedor encontrado</option>';
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao pesquisar fornecedores:', error);
+            }
+        });
+    }
+    
 });
+
+
+$(document).ready(function() {
+    // Pesquisa de fornecedores no modal de edição
+    $('#fornecedorPesquisaEdit').on('input', function() {
+        let nomeFornecedor = $(this).val();
+        if (nomeFornecedor.length > 0) {
+            $.ajax({
+                url: '/gerenciar/fornecedores/pesquisar',
+                method: 'GET',
+                data: { nome: nomeFornecedor },
+                success: function(response) {
+                    let fornecedores = response.fornecedores;
+                    let lista = $('#listaFornecedoresEdit');
+                    lista.empty(); // Limpa a lista existente
+                    if (fornecedores.length > 0) {
+                        fornecedores.forEach(function(fornecedor) {
+                            lista.append(`<li class="list-group-item" data-id="${fornecedor.id}">${fornecedor.nome}</li>`);
+                        });
+                        lista.show(); // Mostra a lista
+                    } else {
+                        lista.hide(); // Esconde a lista se não houver fornecedores
+                    }
+                },
+                error: function() {
+                    alert('Erro ao buscar fornecedores.');
+                }
+            });
+        } else {
+            $('#listaFornecedoresEdit').hide(); // Esconde a lista se o campo estiver vazio
+        }
+    });
+
+    // Selecionar fornecedor da lista
+    $(document).on('click', '#listaFornecedoresEdit .list-group-item', function() {
+        let idFornecedor = $(this).data('id');
+        let nomeFornecedor = $(this).text();
+        $('#fornecedorPesquisaEdit').val(nomeFornecedor); // Define o nome no campo de pesquisa
+        $('#fornecedor_id_edit').val(idFornecedor); // Define o ID do fornecedor oculto
+        $('#listaFornecedoresEdit').hide(); // Esconde a lista
+    });
+});
+
+$(document).ready(function() {
+    // Pesquisa de fornecedores no modal de edição
+    $('#fornecedorPesquisaEdit').on('input', function() {
+        let nomeFornecedor = $(this).val();
+        if (nomeFornecedor.length > 0) {
+            $.ajax({
+                url: '/gerenciar/fornecedores/pesquisar',
+                method: 'GET',
+                data: { nome: nomeFornecedor },
+                success: function(response) {
+                    let fornecedores = response.fornecedores;
+                    let lista = $('#listaFornecedoresEdit');
+                    lista.empty(); // Limpa a lista existente
+                    if (fornecedores.length > 0) {
+                        fornecedores.forEach(function(fornecedor) {
+                            lista.append(`<li class="list-group-item" data-id="${fornecedor.id}">${fornecedor.nome}</li>`);
+                        });
+                        lista.show(); // Mostra a lista
+                    } else {
+                        lista.hide(); // Esconde a lista se não houver fornecedores
+                    }
+                },
+                error: function() {
+                    alert('Erro ao buscar fornecedores.');
+                }
+            });
+        } else {
+            $('#listaFornecedoresEdit').hide(); // Esconde a lista se o campo estiver vazio
+        }
+    });
+
+    // Selecionar fornecedor da lista
+    $(document).on('click', '#listaFornecedoresEdit .list-group-item', function() {
+        let idFornecedor = $(this).data('id');
+        let nomeFornecedor = $(this).text();
+        $('#fornecedorPesquisaEdit').val(nomeFornecedor); // Define o nome no campo de pesquisa
+        $('#fornecedor_id_edit').val(idFornecedor); // Define o ID do fornecedor oculto
+        $('#listaFornecedoresEdit').hide(); // Esconde a lista
+    });
+});
+
+// Adicione o seguinte código ao final do arquivo gerenciar.js
+document.getElementById('fornecedorPesquisaEdit').addEventListener('input', pesquisarFornecedores);
