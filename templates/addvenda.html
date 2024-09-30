@@ -25,7 +25,7 @@
         <div class="text-center container mt-5">
             <!-- Busca de Cliente -->
             <div class="align-content-center">
-                <label for="nome_cliente" class="form-label">Nome do Cliente</label>
+                <label for="nome_cliente" class="titulo">Nome do Cliente</label>
                 <input type="text" id="nome_cliente" name="nome_cliente" class="form-control" placeholder="Digite o nome do cliente" oninput="buscarCliente()" required>
                 <ul id="sugestoes_clientes" class="list-group mt-2" style="display: none;"></ul>
             </div>
@@ -97,19 +97,22 @@
             
     <!-- Lista de Vendas -->
     <h2>Lista de Vendas</h2>
-    <ul id="lista-vendas">
-        {% for venda in vendas %}
-            <li data-id="{{ venda.idCompra }}">
-                <h3>{{ venda.cliente }}</h3>
-                <p><strong>Produto:</strong> {{ venda.produto }}</p>
-                <p><strong>Data:</strong> {{ venda.data }}</p>
-                <p><strong>Quantidade:</strong> {{ venda.quantidade }}</p>
-                <p><strong>Valor:</strong> {{ venda.valor }}</p>
-                <button class="btn btn-warning btn-sm" onclick="abrirModalEditarVenda({{ venda.idCompra }})">Editar</button>
-                <button class="btn btn-danger btn-sm" onclick="deletarVenda({{ venda.idCompra }})">Excluir</button>
-            </li>
-        {% endfor %}
-    </ul>
+        <ul id="lista" class="list-group">
+            {% for venda in vendas %}
+                <li data-id="{{ venda.idCompra }}">
+                    <h3>{{ venda.cliente }}</h3>
+                    <p style="color: #f0ffffde;"><strong>Produto:</strong> {{ venda.produto }}</p>
+                    <p style="color: #f0ffffde;"><strong>Data:</strong> {{ venda.data }}</p>
+                    <p style="color: #f0ffffde;"><strong>Quantidade:</strong> {{ venda.quantidade }}</p>
+                    <p style="color: #f0ffffde;"><strong>Valor:</strong> {{ venda.valor }}</p>
+                    <div class="button-group">
+                        <button class="btn btn-warning btn-sm" onclick="abrirModalEditarVenda({{ venda.idCompra }})">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="deletarVenda({{ venda.idCompra }})">Excluir</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    
 
 
 

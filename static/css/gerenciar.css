@@ -267,6 +267,13 @@ body {
     box-shadow: 0px 10px 40px -12px #f80404;
 }
 
+.botao-container {
+    display: flex; /* Exibe os botões em linha */
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+
+
 
 @media (max-width: 576px) {
     .pesquisa-input {
