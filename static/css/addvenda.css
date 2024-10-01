@@ -48,7 +48,11 @@ select {
 
 input::placeholder,
 select option {
-    color: #f0ffff94;
+    color: #ffffff;
+}
+
+input::placeholder {
+    color: #ffffff; /* Branco */
 }
 
 input[type="text"]:focus,
@@ -60,31 +64,40 @@ select:focus {
 
 .btn-primary, .btn-danger, .btn-warning, .btn-success {
     width: auto;
-    padding: 8px;
+    padding: 4px 4px;
+    font-size: 0.875rem; /* Reduzindo o tamanho da fonte */
     border: none;
     border-radius: 8px;
-    text-transform: uppercase;
+    text-transform: none;
     font-weight: 800;
     letter-spacing: 1px;
     cursor: pointer;
 }
 
+
+
 .btn-primary {
     background: #007bff; /* Azul */
     color: #fff;
+    text-transform: uppercase;
+    padding: 8px 8px;
 }
 
 .btn-primary:hover {
     background-color: #0056b3; /* Azul escuro */
+    text-transform: uppercase;
+    padding: 8px 8px;
 }
 
 .btn-danger {
     background: #f80404; /* Vermelho */
     color: #fff;
+    padding: 8px 8px;
 }
 
 .btn-danger:hover {
     background-color: #c50000; /* Vermelho escuro */
+    padding: 8px 8px;
 }
 
 .btn-warning {
@@ -95,6 +108,8 @@ select:focus {
 .btn-success {
     background: #28a745; /* Verde */
     color: #fff;
+    text-transform: uppercase;
+    padding: 8px 8px;
 }
 
 ul {
@@ -106,13 +121,13 @@ ul {
 li {
     background-color: #00000009;
     border: 1px solid #f80404;
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.521);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: flex-start; /* Alinhamento à esquerda */
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.521);
 }
 
 h3 {
@@ -173,6 +188,15 @@ button {
     border: var(--bs-border-width) solid #514869;
     border-radius: var(--bs-border-radius);
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    color: #ffffff;
+}
+
+.form-control:focus {
+    color: var(--bs-body-color);
+    background-color: #514869;
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
 }
 
 h2 {
@@ -191,6 +215,99 @@ h1 {
     margin-top: 20px; /* Margem superior */
 }
 
+.list-group {
+
+    --bs-list-group-bg: #514869;
+    --bs-list-group-border-color: #514869;
+    --bs-list-group-color: #ffffff;
+}
+
+.modal-header {
+    background-color: #514869;
+}
+
+.modal-body {
+background-color: #2f2841;
+}
+
+.modal-footer {
+    background-color: #2f2841;
+}
+
+
+/* Tornar os botões de "Editar" e "Excluir" com texto normal */
+.btn-warning, .btn-danger {
+    font-weight: normal; /* Remove o negrito */
+}
+
+
+/* Estilos para o botão "Cancelar Carrinho" */
+.btn-cancelar {
+    width: auto; /* ou defina um tamanho fixo, se preferir */
+    padding: 5px 5px; /* Tamanho do padding */
+    font-size: 0.875rem; /* Tamanho da fonte */
+    border: 1px solid #f80404; /* Borda vermelha */
+    border-radius: 8px; /* Bordas arredondadas */
+    background-color: #ff0000; /* Cor de fundo branca */
+    color: #ffffff; /* Cor do texto vermelha */
+    transition: background-color 0.3s, color 0.3s; /* Transição suave */
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.btn-cancelar:hover {
+    background-color: #f8040485; /* Fundo vermelho ao passar o mouse */
+    color: #ffffff; /* Texto branco ao passar o mouse */
+}
+
+/* Estilo para os botões de "Editar" e "Excluir" */
+.button-group button {
+    font-weight: normal; /* Remove negrito */
+}
+
+
+#sugestoes_clientes {
+
+    box-shadow: none; /* Remove qualquer box shadow */
+
+}
+
+#sugestoes_clientes li, #sugestoes_produtos_modal li, #sugestoes_clientes_modal li, #sugestoes li {
+    box-shadow: none;
+}
+
+/* Estilos para o formulário de pesquisa */
+#form-buscar-vendas {
+    all: unset; /* Remove todos os estilos herdados */
+    width: auto; /* Largura padrão */
+    display: inline-block; /* Exibe como um bloco inline */
+    margin-top: 20px; /* Margem superior */
+}
+
+.pesquisa-input {
+    width: auto; /* Largura padrão */
+    padding: 5px; /* Padding padrão */
+    border: 1px solid #000; /* Borda padrão */
+    border-radius: 4px; /* Bordas levemente arredondadas */
+    background-color: #fff; /* Fundo branco */
+    color: #000; /* Texto preto */
+}
+
+.pesquisa-input::placeholder {
+    color: #aaa; /* Cor do placeholder */
+}
+
+.btn-outline-danger {
+    padding: 5px 10px; /* Padding do botão */
+    border: 1px solid #f80404; /* Borda vermelha */
+    background-color: #fff; /* Fundo branco */
+    color: #f80404; /* Texto vermelho */
+}
+
+.btn-outline-danger:hover {
+    background-color: #f80404; /* Fundo vermelho ao passar o mouse */
+    color: #fff; /* Texto branco ao passar o mouse */
+}
 
 
 @media (max-width: 576px) {

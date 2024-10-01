@@ -235,3 +235,28 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    // Mostrar a lista de fornecedores ao focar no campo de pesquisa
+    $('#fornecedorPesquisa').on('focus', function() {
+        $('#listaFornecedores').show();
+    });
+
+    // Esconder a lista de fornecedores ao sair do campo de pesquisa
+    $('#fornecedorPesquisa').on('blur', function() {
+        setTimeout(() => { // Delay para permitir a seleção antes de esconder
+            $('#listaFornecedores').hide();
+        }, 200);
+    });
+
+    // Repetir para o campo de pesquisa de edição
+    $('#fornecedorPesquisaEdit').on('focus', function() {
+        $('#listaFornecedoresEdit').show();
+    });
+
+    $('#fornecedorPesquisaEdit').on('blur', function() {
+        setTimeout(() => {
+            $('#listaFornecedoresEdit').hide();
+        }, 200);
+    });
+});
+

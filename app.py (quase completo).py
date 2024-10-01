@@ -590,30 +590,32 @@ def buscar_venda(id):
 
 
 # Read vendas
+# Read vendas
 @app.route('/vendas', methods=['GET'])
 def listar_vendas():
-    cursor.execute("""
+    cursor.execute(""" 
         SELECT c.idCompra, cl.nome, p.nome, c.data, c.quantidade, (c.quantidade * p.preco) AS valor
         FROM Compra c
         JOIN Cliente cl ON c.idCliente = cl.idCliente
         JOIN Produto p ON c.idProduto = p.idProduto
-        WHERE c.idCompra = %s
-    """, (id,))
-    venda = cursor.fetchone()
+    """)
     
-    if not venda:
-        return jsonify({'success': False, 'message': 'Venda não encontrada'}), 404
+    vendas = cursor.fetchall()  # Mudei aqui para buscar todas as vendas
+    vendas_list = []
     
-    venda_dict = {
-        'idCompra': venda[0],
-        'cliente': venda[1],
-        'produto': venda[2],
-        'data': venda[3].strftime('%Y-%m-%d'),  # Ajuste o formato de data, se necessário
-        'quantidade': venda[4],
-        'valor': venda[5]
-    }
+    for venda in vendas:
+        venda_dict = {
+            'idCompra': venda[0],
+            'cliente': venda[1],
+            'produto': venda[2],
+            'data': venda[3].strftime('%Y-%m-%d'),  # Ajuste o formato de data, se necessário
+            'quantidade': venda[4],
+            'valor': venda[5]
+        }
+        vendas_list.append(venda_dict)
     
-    return jsonify(venda_dict)
+    return jsonify(vendas_list)  # Retorna a lista de vendas
+
 
 
 # Update venda
@@ -689,6 +691,38 @@ def deletar_venda(id):
         print(f"Erro ao deletar venda: {str(e)}")
         db.rollback()  # Desfaz as alterações se ocorrer um erro
         return jsonify({'success': False, 'message': 'Erro ao deletar a venda', 'error': str(e)}), 500
+
+
+@app.route('/pesquisar_vendas', methods=['GET'])
+def pesquisar_vendas():
+    nome = request.args.get('nome', default='', type=str)
+
+    try:
+        if nome:  # Se o nome não estiver vazio, faz a busca filtrada
+            cursor.execute("""
+                SELECT c.idCompra, cl.nome, p.nome, c.data, c.quantidade, (c.quantidade * p.preco) AS valor
+                FROM Compra c
+                JOIN Cliente cl ON c.idCliente = cl.idCliente
+                JOIN Produto p ON c.idProduto = p.idProduto
+                WHERE p.nome LIKE %s
+            """, ('%' + nome + '%',))
+        else:  # Se o nome estiver vazio, busca todas as vendas
+            cursor.execute("""
+                SELECT c.idCompra, cl.nome, p.nome, c.data, c.quantidade, (c.quantidade * p.preco) AS valor
+                FROM Compra c
+                JOIN Cliente cl ON c.idCliente = cl.idCliente
+                JOIN Produto p ON c.idProduto = p.idProduto
+            """)
+
+        vendas = cursor.fetchall()
+
+        # Convertendo vendas para dicionário para retornar como JSON
+        vendas_list = [{'idCompra': v[0], 'cliente': v[1], 'produto': v[2], 'data': v[3].strftime('%d-%m-%Y'), 'quantidade': v[4], 'valor': v[5]} for v in vendas]
+
+        return jsonify({'vendas': vendas_list})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':

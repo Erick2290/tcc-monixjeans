@@ -203,32 +203,113 @@ function finalizarCompra() {
     });
 }
 
-// Função para listar vendas
-function listarVendas() {
-    $.ajax({
-        url: '/vendas',
-        method: 'GET',
-        success: function(data) {
-            $('#corpo-tabela-vendas').empty();
-            data.forEach(function(venda) {
-                $('#corpo-tabela-vendas').append(
-                    '<tr>' +
-                    '<td>' + venda.idCompra + '</td>' +
-                    '<td>' + venda.cliente + '</td>' +
-                    '<td>' + venda.produto + '</td>' +
-                    '<td>' + venda.data + '</td>' +
-                    '<td>' + venda.quantidade + '</td>' +
-                    '<td>' + venda.valor.toFixed(2) + '</td>' + 
-                    '<td>' +
-                    '<button class="btn btn-warning" onclick="abrirModalEditarVenda(' + venda.idCompra + ')">Editar</button>' +
-                    '<button class="btn btn-danger" onclick="deletarVenda(' + venda.idCompra + ')">Deletar</button>' +
-                    '</td>' +
-                    '</tr>'
-                );
-            });
-        }
-    });
+
+document.querySelector('form[action="/pesquisar_vendas"]').addEventListener('submit', function(e) {
+    e.preventDefault(); // Impede o envio padrão do formulário
+    const nome = this.querySelector('input[name="nome"]').value;
+
+    if (nome.trim() === '') {
+        listarVendas(true); // Chama listarVendas com uma flag para buscar a lista original
+    } else {
+        // Se não estiver vazio, faz a busca
+        fetch(`/pesquisar_vendas?nome=${encodeURIComponent(nome)}`, {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.vendas && data.vendas.length > 0) {
+                const listaVendas = document.getElementById('lista-vendas');
+                listaVendas.innerHTML = '';
+                data.vendas.forEach(venda => {
+                    listaVendas.innerHTML += `
+                        <li data-id="${venda.idCompra}">
+                            <h3>${venda.produto}</h3>
+                            <p><strong>Cliente:</strong> ${venda.cliente}</p>
+                            <p><strong>Data:</strong> ${venda.data}</p>
+                            <p><strong>Quantidade:</strong> ${venda.quantidade}</p>
+                            <p><strong>Valor:</strong> ${venda.valor}R$</p>
+                            <div class="button-group">
+                                <button class="btn btn-warning btn-sm" onclick="abrirModalEditarVenda(${venda.idCompra})">Editar</button>
+                                <button class="btn btn-warning btn-sm" onclick="deletarVenda(${venda.idCompra})">Excluir</button>
+                            </div>
+                        </li>
+                    `;
+                });
+            } else {
+                alert('Nenhuma venda encontrada.');
+            }
+        })
+        .catch(error => {
+            alert('Ocorreu um erro ao pesquisar vendas: ' + error.message);
+        });
+    }
+});
+
+
+function listarVendas(buscarListaOriginal = false) {
+    if (buscarListaOriginal) {
+        $.ajax({
+            url: '/vendas',
+            method: 'GET',
+            success: function(data) {
+                const listaVendas = document.getElementById('lista-vendas');
+                listaVendas.innerHTML = '';
+                data.forEach(function(venda) {
+                    listaVendas.innerHTML += `
+                        <li data-id="${venda.idCompra}">
+                            <h3>${venda.produto}</h3>
+                            <p><strong>Cliente:</strong> ${venda.cliente}</p>
+                            <p><strong>Data:</strong> ${venda.data}</p>
+                            <p><strong>Quantidade:</strong> ${venda.quantidade}</p>
+                            <p><strong>Valor:</strong> ${venda.valor}R$</p>
+                            <div class="button-group">
+                                <button class="btn btn-warning btn-sm" onclick="abrirModalEditarVenda(${venda.idCompra})">Editar</button>
+                                <button class="btn btn-warning btn-sm" onclick="deletarVenda(${venda.idCompra})">Excluir</button>
+                            </div>
+                        </li>
+                    `;
+                });
+            }
+        });
+    } else {
+        $.ajax({
+            url: '/vendas',
+            method: 'GET',
+            success: function(data) {
+                const listaVendas = document.getElementById('lista-vendas');
+                listaVendas.innerHTML = '';
+                data.forEach(function(venda) {
+                    listaVendas.innerHTML += `
+                        <li data-id="${venda.idCompra}">
+                            <h3>${venda.produto}</h3>
+                            <p><strong>Cliente:</strong> ${venda.cliente}</p>
+                            <p><strong>Data:</strong> ${venda.data}</p>
+                            <p><strong>Quantidade:</strong> ${venda.quantidade}</p>
+                            <p><strong>Valor:</strong> ${venda.valor}R$</p>
+                            <div class="button-group">
+                                <button class="btn btn-warning btn-sm" onclick="abrirModalEditarVenda(${venda.idCompra})">Editar</button>
+                                <button class="btn btn-warning btn-sm" onclick="deletarVenda(${venda.idCompra})">Excluir</button>
+                            </div>
+                        </li>
+                    `;
+                });
+            }
+        });
+    }
 }
+
+// Chamar listarVendas na inicialização da página
+$(document).ready(function() {
+    listarVendas();
+    toggleCamposProduto(false);
+
+    const dataAtual = new Date();
+    const dia = String(dataAtual.getDate()).padStart(2, '0');
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+    const ano = dataAtual.getFullYear();
+    const dataFormatadaParaInput = `${ano}-${mes}-${dia}`;
+    $('#data_venda').val(dataFormatadaParaInput);
+});
 
 // Função para abrir modal de edição
 function abrirModalEditarVenda(id) {
@@ -334,19 +415,6 @@ function deletarVenda(id) {
         });
     }
 }
-
-// Chamar listarVendas na inicialização da página
-$(document).ready(function() {
-    listarVendas();
-    toggleCamposProduto(false);
-
-    const dataAtual = new Date();
-    const dia = String(dataAtual.getDate()).padStart(2, '0');
-    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
-    const ano = dataAtual.getFullYear();
-    const dataFormatadaParaInput = `${ano}-${mes}-${dia}`;
-    $('#data_venda').val(dataFormatadaParaInput);
-});
 
 // Função para cancelar o carrinho
 function cancelarCarrinho() {

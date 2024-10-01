@@ -301,6 +301,10 @@ body {
     --bs-list-group-color: #ffffff;
 }
 
+.hidden {
+        display: none;
+    }
+
 @media (max-width: 576px) {
     .pesquisa-input {
         width: 100%; /* Ajuste para ocupar toda a largura em dispositivos menores */

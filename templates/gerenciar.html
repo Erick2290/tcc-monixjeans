@@ -31,17 +31,29 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">Gerenciamento de Produtos</h1>
 
-        <!-- Alerta de Estoque Baixo -->
-        <div class="alert alert-warning" role="alert">
-            <h4 class="alert-heading">Alerta de Estoque</h4>
-            {% if produtos_baixo_estoque %}
-            <ul>
-              {% for produto in produtos_baixo_estoque %}
-                <li>{{ produto[0] }}  Unidades de {{ produto[1] }} </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
+
+     <!-- Botão para mostrar/ocultar o alerta de estoque baixo -->
+     <div class="d-flex justify-content-center">
+        <button id="toggleLowStock" class="btn btn-warning">Mostrar Produtos com Estoque Baixo</button>
+    </div>
+
+<!-- O alerta de estoque baixo -->
+<div id="alertaEstoque" class="alert alert-warning hidden" role="alert">
+    <h4 class="alert-heading">Alerta de Estoque</h4>
+    {% if produtos_baixo_estoque %}
+    <ul>
+        {% for produto in produtos_baixo_estoque %}
+        <li>{{ produto[0] }} Unidades de {{ produto[1] }} </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+
+
+<!-- CSS para ocultar o alerta inicialmente -->
+
+
 
         <!-- Formulário para Adicionar Produto -->
         <div id="formProduto" class="mb-4">
@@ -145,7 +157,20 @@
     </div>
 </div>
 
-
+<!-- Script para alternar a visibilidade do alerta -->
+<script>
+    document.getElementById("toggleLowStock").addEventListener("click", function() {
+        var alertaEstoque = document.getElementById("alertaEstoque");
+        
+        if (alertaEstoque.classList.contains("hidden")) {
+            alertaEstoque.classList.remove("hidden");
+            this.textContent = "Ocultar Produtos com Estoque Baixo";
+        } else {
+            alertaEstoque.classList.add("hidden");
+            this.textContent = "Mostrar Produtos com Estoque Baixo";
+        }
+    });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <script src="{{ url_for('static', filename='js/gerenciar.js') }}"></script>
