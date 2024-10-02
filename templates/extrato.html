@@ -43,25 +43,21 @@
             <div class="col-lg-6">
                 <div class="left-extrato">
                     <h2>Período de Tempo</h2>
-                    <form>
+                    <form method="POST" action="{{ url_for('extrato') }}">
                         <div class="textfield">
                             <label for="data_inicio">Data de Início</label>
-                            <input type="date" id="data_inicio" name="data_inicio">
+                            <input type="date" id="data_inicio" name="data_inicio" required>
                         </div>
                         <div class="textfield">
                             <label for="data_fim">Data de Fim</label>
-                            <input type="date" id="data_fim" name="data_fim">
+                            <input type="date" id="data_fim" name="data_fim" required>
                         </div>
                         <button type="submit" class="btn-extrato">Consultar</button>
                     </form>
                     <div class="resultado">
-                        <div class="valor-investido">
-                            <h3>Valor Investido</h3>
-                            <p>R$ 1000,00</p>
-                        </div>
                         <div class="lucro">
-                            <h3>Lucro</h3>
-                            <p>R$ 2000,00</p>
+                            <h3>Valor das Vendas</h3>
+                            <p>R$ {{ valor_total }}</p>
                         </div>
                     </div>
                 </div>
@@ -78,85 +74,32 @@
                     <div class="pecas-venderam">
                         <h3>Peças Mais Vendidas</h3>
                         <ul>
-                            <li>Saia Jeans</li>
-                            <li>Saia Plus Size</li>
-                            <li>Calça Folgada</li>
+                            {% for produto in produtos_vendidos %}
+                                <li>{{ produto[0] }} - {{ produto[1] }} unidades vendidas</li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="vendas-aumentadas">
                         <h3>Histórico</h3>
                         <label for="tipo-roupa">Selecione o tipo de roupa:</label>
                         <select id="tipo-roupa">
-                            <option value="calca-justa">Calça Justa</option>
-                            <option value="calca-plus-size">Calça Plus Size</option>
-                            <option value="saia-jeans">Saia Jeans</option>
-                            <option value="saia-plus-size">Saia Plus Size</option>
-                            <option value="calca-folgada">Calça Folgada</option>
+                          {% for produto in produtos_vendidos %}
+                            <option value="{{ produto[0] }}">{{ produto[0] }}</option>
+                          {% endfor %}
                         </select>
-                        <canvas id="grafico-vendas" width="400" height="300"></canvas>
-                    </div>
+                        <canvas id="grafico-vendas" width="400" height="300" data-produtos-vendidos='{{ produtos_vendidos | tojson | safe }}'></canvas>
+                      </div>
                     
                 </div>
             </div>
         </div>
     </div>
 
+    <canvas id="grafico-vendas" width="400" height="300" data-produtos-vendidos='{{ produtos_vendidos | tojson | safe }}'></canvas>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Seletor da imagem centralizada no cabeçalho
-            const logoImg = document.getElementById('logo');
-      
-            // Evento de clique na imagem
-            logoImg.addEventListener('click', function() {
-                // Redirecionamento para o menu
-                window.location.href = 'file:///C:/Users/Erick/Desktop/MONIXJEANS/Menu/menu.html';
-            });
-        });
-    </script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>document.addEventListener('DOMContentLoaded', function() {
-    // Dados fictícios para o gráfico (substitua com dados reais)
-    const dadosGrafico = {
-        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
-        datasets: [{
-            label: 'Vendas',
-            backgroundColor: '#f80404',
-            borderColor: '#f80404',
-            data: [500, 700, 600, 800, 900, 1000] // Dados de vendas por mês
-        }]
-    };
-
-    const config = {
-        type: 'bar', // Tipo de gráfico (pode ser bar, line, pie, etc.)
-        data: dadosGrafico,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false // Não exibir a legenda neste exemplo
-                }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false // Não exibir linhas de grade no eixo X
-                    }
-                },
-                y: {
-                    beginAtZero: true // Começar o eixo Y a partir de zero
-                }
-            }
-        }
-    };
-
-    // Obtém o contexto do canvas e cria o gráfico
-    const ctx = document.getElementById('grafico-vendas').getContext('2d');
-    new Chart(ctx, config);
-});
-</script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/extrato.js') }}"></script>
 </body>
 </html>

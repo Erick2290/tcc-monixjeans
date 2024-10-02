@@ -346,13 +346,36 @@ def pesquisar_fornecedor():
     except Exception as e:
         return render_template('erro.html', mensagem=str(e))
 
-@app.route('/extrato')
+@app.route('/extrato', methods=['GET', 'POST'])
 def extrato():
     if not usuario_autenticado():
         return redirect(url_for('login'))
 
-    return render_template('extrato.html')
+    produtos_vendidos = []
+    valor_total = 0  # Inicializando a variável para armazenar o valor total das vendas
 
+    if request.method == 'POST':
+        data_inicio = request.form['data_inicio']
+        data_fim = request.form['data_fim']
+        
+        # Consulta para obter os produtos vendidos
+        query = '''
+            SELECT p.nome, SUM(c.quantidade) AS total_vendas, SUM(c.valor) AS total_valor
+            FROM Compra c
+            JOIN Produto p ON c.idProduto = p.idProduto
+            WHERE c.data BETWEEN %s AND %s
+            GROUP BY p.nome
+            ORDER BY total_vendas DESC;
+        '''
+        cursor.execute(query, (data_inicio, data_fim))
+        produtos_vendidos = cursor.fetchall()
+
+        # Calcula o valor total das vendas
+        for produto in produtos_vendidos:
+            # produto[2] corresponde ao total_valor que foi obtido na consulta
+            valor_total += produto[2]  # Adiciona o valor total de cada produto ao valor total
+
+    return render_template('extrato.html', produtos_vendidos=produtos_vendidos, valor_total=valor_total)
 
 
 
@@ -588,8 +611,6 @@ def buscar_venda(id):
         return jsonify({'success': False, 'message': 'Venda não encontrada'}), 404
 
 
-
-# Read vendas
 # Read vendas
 @app.route('/vendas', methods=['GET'])
 def listar_vendas():
@@ -724,6 +745,31 @@ def pesquisar_vendas():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/vendas_mensais', methods=['GET'])
+def vendas_mensais():
+    produto = request.args.get('produto', default='', type=str)
+
+    try:
+        if produto:  # Se o produto não estiver vazio, faz a busca filtrada
+            cursor.execute("""
+                SELECT EXTRACT(MONTH FROM c.data) AS mes, SUM(c.quantidade) AS quantidade
+                FROM Compra c
+                JOIN Produto p ON c.idProduto = p.idProduto
+                WHERE p.nome = %s
+                GROUP BY EXTRACT(MONTH FROM c.data)
+            """, (produto,))
+        else:  # Se o produto estiver vazio, busca todas as vendas
+            return jsonify({'error': 'Produto não informado'}), 400
+
+        vendas_mensais = cursor.fetchall()
+
+        # Convertendo vendas_mensais para dicionário para retornar como JSON
+        vendas_mensais_list = [{'mes': v[0], 'quantidade': v[1]} for v in vendas_mensais]
+
+        return jsonify({'vendas_mensais': vendas_mensais_list})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
