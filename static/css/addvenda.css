@@ -52,8 +52,18 @@ select option {
 }
 
 input::placeholder {
-    color: #ffffff; /* Branco */
+    color: #000000; /* Branco */
 }
+
+
+
+.pesquisa-input:focus {
+    background-color: #fff /* Mantém o fundo branco ao focar */  !important;
+    color: #000; /* Mantém o texto preto ao focar */
+    outline: none; /* Remove o contorno padrão do foco */
+}
+
+
 
 input[type="text"]:focus,
 input[type="number"]:focus,
@@ -286,10 +296,11 @@ background-color: #2f2841;
 
 .pesquisa-input {
     width: auto; /* Largura padrão */
-    padding: 5px; /* Padding padrão */
+    padding: 8px; /* Padding padrão */
     border: 1px solid #000; /* Borda padrão */
-    border-radius: 4px; /* Bordas levemente arredondadas */
+    border-radius: 8px; /* Bordas levemente arredondadas */
     background-color: #fff; /* Fundo branco */
+    box-shadow: none; /* Remove qualquer sombra ao focar */
     color: #000; /* Texto preto */
 }
 
@@ -309,6 +320,12 @@ background-color: #2f2841;
     color: #fff; /* Texto branco ao passar o mouse */
 }
 
+.btn-outline-danger {
+    padding: 5px 10px;
+    border: 1px solid #f80404;
+    background-color: #ffffff00;
+    color: #f80404;
+}
 
 @media (max-width: 576px) {
     .pesquisa-input {
